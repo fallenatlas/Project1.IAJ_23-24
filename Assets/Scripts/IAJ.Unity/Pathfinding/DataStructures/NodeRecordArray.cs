@@ -55,20 +55,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void AddToClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
             nodeRecord.status = NodeStatus.Closed;
             NodeRecords[nodeRecord.index].status = NodeStatus.Closed;
         }
 
         public NodeRecord SearchInOpen(NodeRecord nodeRecord)
         {
-            //TODO implement
             return nodeRecord.status == NodeStatus.Open ? nodeRecord : null;
         }
 
         public NodeRecord SearchInClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
             return nodeRecord.status == NodeStatus.Closed ? nodeRecord : null;
         }
 
@@ -96,7 +93,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void RemoveFromClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
             nodeRecord.status = NodeStatus.Unvisited;
             NodeRecords[nodeRecord.index].status = NodeStatus.Unvisited;
         }

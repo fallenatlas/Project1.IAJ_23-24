@@ -56,7 +56,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             {
                 neighbourNode.parent = parentNode;
                 neighbourNode.gCost = newGCost;
-                float newHCost = Heuristic.H(neighbourNode, GoalNode);
+                neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                 neighbourNode.CalculateFCost();
                 NodeRecordArray.AddToOpen(neighbourNode);
             }

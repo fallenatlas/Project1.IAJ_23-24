@@ -128,6 +128,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             hCost = 0;
             fCost = gCost + hCost;
             parent = null;
+            status = NodeStatus.Unvisited;
         }
 
     }
