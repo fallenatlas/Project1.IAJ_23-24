@@ -42,6 +42,8 @@ public class PathfindingManager : MonoBehaviour
     [Tooltip("Add settings to your liking, useful for faster testing")]
     //public properties useful for testing, you can add other booleans here such as which heuristic to use
     public bool partialPath;
+    public bool AStarAlgorithm;
+    public bool NodeArrayAStarAlgorithm;
     public bool useGoalBound;
    
     //Grid configuration
@@ -75,8 +77,14 @@ public class PathfindingManager : MonoBehaviour
         this.LoadGrid(gridPath);
 
        // Creating and Initializing the Pathfinding class, you can change the open, closed and heuristic sets here new ZeroHeuristic()
-       //this.pathfinding = new AStarPathfinding(new SimpleUnorderedNodeList(), new ClosedDictionary(), new EuclideanDistance());
-       this.pathfinding = new NodeArrayAStarPathfinding(new EuclideanDistance());
+        if (AStarAlgorithm)
+            this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
+        else if (NodeArrayAStarAlgorithm)
+            this.pathfinding = new NodeArrayAStarPathfinding(new EuclideanDistance());
+        // else if (useGoalBound)
+        //     this.pathfinding = new GoalBoundAStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
+        else
+            this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
 
         visualGrid.GridMapVisual(textLines, this.pathfinding.grid);
 

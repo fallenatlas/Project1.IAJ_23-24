@@ -79,15 +79,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             var ProcessedNodes = 0;
             NodeRecord CurrentNode;
 
-            // TODO implement
-
             //While Open is not empty or if nodes havent been all processed 
             while (Open.CountOpen() > 0)
             {
-                //ProcessedNodes < grid.getAll().Count
-                //grid.getAll().Count;
-                //TotalProcessedNodes += 1;
-                //ProcessedNodes += 1;
                 if (ProcessedNodes == NodesPerSearch)
                 {
                     if (returnPartialSolution) 
@@ -109,6 +103,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     return true;
                 }
 
+                //Handle the neighbours/children with something like this
                 foreach (var neighbourNode in CurrentNode.GetNeighbourList(grid)) 
                 {
                     this.ProcessChildNode(CurrentNode, neighbourNode);
@@ -122,37 +117,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 }
             }
 
+            //Out of nodes on the openList
             solution = null;
             return true;
 
-            // CurrentNode is the best one from the Open set, start with that
-            // var CurrentNode = Open......
-            // 
-
-            //Handle the neighbours/children with something like this
-            //foreach (var neighbourNode in currentNode.GetNeighbourList(grid))
-            //{
-            // this.ProcessChildNode(currentNode, neighbourNode)
-            //}
-
-            //Out of nodes on the openList
     }
 
         protected virtual void ProcessChildNode(NodeRecord parentNode, NodeRecord node)
         {
-            //NodeRecord child = new NodeRecord(node.x, node.y);
-            //child.parent = parentNode;
-            //child.gCost = parentNode.gCost + CalculateDistanceCost(parentNode, node);
-            //child.CalculateFCost();
-            //node.gCost = parentNode.gCost + CalculateDistanceCost(parentNode, node);
-            //node.CalculateFCost();
 
             float newGCost = parentNode.gCost + CalculateDistanceCost(parentNode, node);
 
-            // Calculate newCost: parent cost + Calculate Distance Cont 
-            //bool exists = false;
-            //NodeRecord existingNode = Closed.SearchInClosed(node);
-            //If in Closed...
             if (Closed.SearchInClosed(node) != null)
             {
                 if (newGCost < node.gCost)
@@ -166,8 +141,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 }
             }
 
-            //existingNode = Open.SearchInOpen(node);
-
             //If in Open..
             else if (Open.SearchInOpen(node) != null)
             {
@@ -178,8 +151,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     node.hCost = Heuristic.H(node, GoalNode);
                     node.CalculateFCost();
                 }
-                //Open.RemoveFromOpen(node);
-                //Open.AddToOpen(node);
             }
 
             //If node is not in any list ....
@@ -231,14 +202,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             path.Add(endNode);
 
             var current = endNode.parent;
-            while (!current.Equals(StartNode))
+            while (current != null)
             {
                 path.Add(current);
                 current = current.parent;
             }
-
-            // TODO implement
-            // Start from the end node and go up until the beggining of the path
 
             path.Reverse();
             return path;
