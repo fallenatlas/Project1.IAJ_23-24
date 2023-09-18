@@ -135,7 +135,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     Closed.RemoveFromClosed(node);
                     node.parent = parentNode;
                     node.gCost = newGCost;
-                    node.hCost = Heuristic.H(node, GoalNode);
                     node.CalculateFCost();
                     Open.AddToOpen(node);
                 }
@@ -148,7 +147,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 {
                     node.parent = parentNode;
                     node.gCost = newGCost;
-                    node.hCost = Heuristic.H(node, GoalNode);
                     node.CalculateFCost();
                 }
             }

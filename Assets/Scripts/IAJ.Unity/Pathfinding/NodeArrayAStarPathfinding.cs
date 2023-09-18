@@ -28,11 +28,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         protected override void ProcessChildNode(NodeRecord parentNode, NodeRecord neighbourNode)
         {
             float newGCost = parentNode.gCost + CalculateDistanceCost(parentNode, neighbourNode);
-            float newHCost = Heuristic.H(neighbourNode, GoalNode);
 
-            // Calculate newCost: parent cost + Calculate Distance Cont 
-            //bool exists = false;
-            //NodeRecord existingNode = Closed.SearchInClosed(node);
             //If in Closed...
             if (NodeRecordArray.SearchInClosed(neighbourNode) != null)
             {
@@ -41,14 +37,10 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     NodeRecordArray.RemoveFromClosed(neighbourNode);
                     neighbourNode.parent = parentNode;
                     neighbourNode.gCost = newGCost;
-                    neighbourNode.hCost = newHCost;
                     neighbourNode.CalculateFCost();
                     NodeRecordArray.AddToOpen(neighbourNode);
                 }
             }
-
-            //existingNode = Open.SearchInOpen(node);
-
             //If in Open..
             else if (NodeRecordArray.SearchInOpen(neighbourNode) != null)
             {
@@ -56,19 +48,15 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 {
                     neighbourNode.parent = parentNode;
                     neighbourNode.gCost = newGCost;
-                    neighbourNode.hCost = newHCost;
                     neighbourNode.CalculateFCost();
                 }
-                //Open.RemoveFromOpen(node);
-                //Open.AddToOpen(node);
             }
-
             //If node is not in any list ....
             else
             {
                 neighbourNode.parent = parentNode;
                 neighbourNode.gCost = newGCost;
-                neighbourNode.hCost = newHCost;
+                float newHCost = Heuristic.H(neighbourNode, GoalNode);
                 neighbourNode.CalculateFCost();
                 NodeRecordArray.AddToOpen(neighbourNode);
             }

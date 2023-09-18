@@ -65,8 +65,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         {
             int value = this.fCost.CompareTo(other.fCost);
             return value == 0 ? this.hCost.CompareTo(other.hCost) : value;
-
-            //return this.fCost.CompareTo(other.fCost);
         }
 
         //two node records are equal if they refer to the same node: Do NOT compare directly with "=="!
