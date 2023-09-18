@@ -63,13 +63,13 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         public NodeRecord SearchInOpen(NodeRecord nodeRecord)
         {
             //TODO implement
-            return NodeRecords[nodeRecord.index].status == NodeStatus.Open ? NodeRecords[nodeRecord.index] : null;
+            return nodeRecord.status == NodeStatus.Open ? nodeRecord : null;
         }
 
         public NodeRecord SearchInClosed(NodeRecord nodeRecord)
         {
             //TODO implement
-            return NodeRecords[nodeRecord.index].status == NodeStatus.Closed ? NodeRecords[nodeRecord.index] : null;
+            return nodeRecord.status == NodeStatus.Closed ? nodeRecord : null;
         }
 
         public NodeRecord GetBestAndRemove()
