@@ -1,8 +1,7 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Assets.Scripts.Grid;
 using Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures;
 using Assets.Scripts.IAJ.Unity.Pathfinding.Heuristics;
@@ -30,31 +29,247 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 for (int j = 0; j < grid.getWidth(); j++)
                 {
 
-                    // TODO implement
+                    
+                    NodeRecord node = grid.GetGridObject(j, i);
 
-                   // Floodfill the grid for each direction..
-
-                   // Calculate the bounding box and repeat
+                    if (node.isWalkable)
+                    { 
+                        /* new Thread(() => { */
+                        Grid<NodeRecord> gridCopy = new Grid<NodeRecord>((Grid<NodeRecord> global, int x, int y) => new NodeRecord(x, y));
+                        grid.getAll().ForEach(node => {
+                            if (!node.isWalkable) {
+                                gridCopy.GetGridObject(node.x, node.y).isWalkable = false;
+                            }
+                        });
+                        NodeRecord copy = gridCopy.GetGridObject(j, i);
+                        FloodFill(copy, gridCopy);
+                        Dictionary<string, Vector4> boxes = ComputeBoundingBoxes(copy, gridCopy);
+                        goalBounds.Add(new Vector2(node.x, node.y), boxes);
+                        boxes.Keys.ToList().ForEach(key => {
+                                Debug.Log("Box for " + node.x + " " + node.y + " " + key + " " + boxes[key]);
+                        });
+                        /* }).Start(); */
+                        // Calculate the bounding box and repeat
+                        
+                    }
+                    
                 }
             }
             
         }
 
         // You can change the arguments of the following method....
-        public void FloodFill( NodeRecord original, NodeRecord neighboor)
+        public void FloodFill(NodeRecord original, Grid<NodeRecord> grid)
         {
-           //TODO
-
             // Quite similar to the A*Search method except the fact that there is no goal....so where does it stop?
-          
-            // Do stuff...
+            NodeRecord CurrentNode = original;
+            
+            CurrentNode.GetNeighbourList(grid).ForEach(neighbour => {
+                neighbour.direction = GetDirectionFromNeighbour(CurrentNode, neighbour);
+                Open.AddToOpen(neighbour);
+            });
+            Closed.AddToClosed(CurrentNode);
+            CurrentNode.gCost = 0;
+            Debug.Log("Flooding for " + original.x + " " + original.y);
+            while (Open.CountOpen() > 0)
+            {
+               
 
+                CurrentNode = Open.GetBestAndRemove();
+                Closed.AddToClosed(CurrentNode);
 
+                Debug.Log("Open " + CurrentNode.x + " " + CurrentNode.y);
+
+                //Handle the neighbours/children with something like this
+                foreach (var neighbourNode in CurrentNode.GetNeighbourList(grid)) 
+                {
+                    float newGCost = CurrentNode.gCost + CalculateDistanceCost(CurrentNode, neighbourNode);
+
+                    if (Closed.SearchInClosed(neighbourNode) != null)
+                    {
+                        if (newGCost < neighbourNode.gCost)
+                        {
+                            Closed.RemoveFromClosed(neighbourNode);
+                            neighbourNode.parent = CurrentNode;
+                            neighbourNode.gCost = newGCost;
+                            neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
+                            neighbourNode.CalculateFCost();
+                            Open.AddToOpen(neighbourNode);
+                        }
+                    }
+
+                    //If in Open..
+                    else if (Open.SearchInOpen(neighbourNode) != null)
+                    {
+                        if (newGCost < neighbourNode.gCost)
+                        {
+                            neighbourNode.parent = CurrentNode;
+                            neighbourNode.gCost = newGCost;
+                            neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
+                            neighbourNode.CalculateFCost();
+                        }
+                    }
+                    else
+                    {
+                        neighbourNode.parent = CurrentNode;
+                        neighbourNode.gCost = newGCost;
+                        neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
+                        neighbourNode.CalculateFCost();
+                        Open.AddToOpen(neighbourNode);
+                    }
+                    if (Open.SearchInOpen(neighbourNode) != null &&  neighbourNode.direction == null) {
+                        neighbourNode.direction = CurrentNode.direction;
+                    }
+                }
+            }
+            grid.getAll().ForEach(node => {
+                if (node.Equals(original)) return;
+                Debug.Log("node at " + node.x + " " + node.y + " with " + node.direction);
+            });
             //At the end it is important to "clean" the Open and Closed Set
             this.Open.Initialize();
             this.Closed.Initialize();
         }
 
+        public Dictionary<string, Vector4> ComputeBoundingBoxes(NodeRecord original, Grid<NodeRecord> grid) {
+            Dictionary<string, Vector4> boxes = new Dictionary<string, Vector4>();
+            grid.getAll().ForEach(node => {
+                if (node.Equals(original) || ! node.isWalkable) return;
+                if (! boxes.ContainsKey(node.direction)) {
+                    boxes.Add(node.direction, new Vector4(node.x, node.x, node.y, node.y));
+                }
+                else {
+                    Vector4 box = boxes[node.direction]; // pass Vector4 by reference
+                    UpdateBox(node, ref box);
+                    boxes[node.direction] = box;
+                }
+            });
+            return boxes;
+        }
+
+        public override bool Search(out List<NodeRecord> solution, bool returnPartialSolution = false) {
+
+            var ProcessedNodes = 0;
+            NodeRecord CurrentNode;
+
+            //While Open is not empty or if nodes havent been all processed 
+            while (Open.CountOpen() > 0)
+            {
+                if (ProcessedNodes == NodesPerSearch)
+                {
+                    if (returnPartialSolution) 
+                    {
+                        solution = CalculatePath(Open.PeekBest());
+                        return false;
+                    }
+
+                    solution = null;
+                    return false;
+                }
+
+                CurrentNode = Open.GetBestAndRemove();
+                Closed.AddToClosed(CurrentNode);
+
+                if (GoalNode.Equals(CurrentNode))
+                {
+                    solution = CalculatePath(CurrentNode);
+                    return true;
+                }
+
+                //Handle the neighbours/children with something like this
+                foreach (var neighbourNode in CurrentNode.GetNeighbourList(grid)) 
+                {
+                    if (InsindeGoalBoundBox(CurrentNode.x, CurrentNode.y, GoalPositionX, GoalPositionY, GetDirectionFromNeighbour(CurrentNode, neighbourNode))) 
+                        this.ProcessChildNode(CurrentNode, neighbourNode);
+                }
+
+                ProcessedNodes += 1;
+                TotalProcessedNodes += 1;
+                if (MaxOpenNodes < Open.CountOpen())
+                {
+                    MaxOpenNodes = Open.CountOpen();
+                }
+            }
+
+            //Out of nodes on the openList
+            solution = null;
+            return true;
+
+    }
+
+        private NodeRecord GetNeighbourFromDirection(NodeRecord node, string direction) {
+            switch (direction)
+            {
+                case "NW":
+                    if (node.x == 0 || node.y == grid.getHeight() - 1)
+                        return null;
+                    return grid.GetGridObject(node.x - 1, node.y + 1);
+                case "N":
+                    if (node.y == grid.getHeight() - 1)
+                        return null;
+                    return grid.GetGridObject(node.x, node.y + 1);
+                case "NE":
+                    if (node.x == grid.getWidth() - 1 || node.y == grid.getHeight() - 1)
+                        return null;
+                    return grid.GetGridObject(node.x + 1, node.y + 1);
+                case "E":
+                    if (node.x == grid.getWidth() - 1)
+                        return null;
+                    return grid.GetGridObject(node.x + 1, node.y);
+                case "SE":
+                    if (node.x == grid.getWidth() - 1 || node.y == 0)
+                        return null;
+                    return grid.GetGridObject(node.x + 1, node.y - 1);
+                case "S":
+                    if (node.y == 0)
+                        return null;
+                    return grid.GetGridObject(node.x, node.y - 1);
+                case "SW":
+                    if (node.x == 0 || node.y == 0)
+                        return null;
+                    return grid.GetGridObject(node.x - 1, node.y - 1);
+                case "W":
+                    if (node.x == 0)
+                        return null;
+                    return grid.GetGridObject(node.x - 1, node.y);
+                default:
+                    return null;
+            }
+        }
+
+        private string GetDirectionFromNeighbour(NodeRecord node, NodeRecord neighbour) {
+            if (node.x == neighbour.x + 1 && node.y == neighbour.y - 1)
+                return "NW";
+            if (node.x == neighbour.x && node.y == neighbour.y - 1)
+                return "N";
+            if (node.x == neighbour.x - 1 && node.y == neighbour.y - 1)
+                return "NE";
+            if (node.x == neighbour.x - 1 && node.y == neighbour.y)
+                return "E";
+            if (node.x == neighbour.x - 1 && node.y == neighbour.y + 1)
+                return "SE";
+            if (node.x == neighbour.x && node.y == neighbour.y + 1)
+                return "S";
+            if (node.x == neighbour.x + 1 && node.y == neighbour.y + 1)
+                return "SW";
+            if (node.x == neighbour.x + 1 && node.y == neighbour.y)
+                return "W";
+            return null;
+        }
+
+        /* protected override void ProcessChildNode(NodeRecord parentNode, NodeRecord neighbourNode)
+        {
+            base.ProcessChildNode(parentNode, neighbourNode);
+        } */
+
+        private void UpdateBox(NodeRecord node, ref Vector4 box) {
+            Debug.Log("node : " + node.x + " " + node.y + " box : " + box.x + " " + box.y + " " + box.z + " " + box.w);
+            box.x = Mathf.Min(box.x, node.x);
+            box.y = Mathf.Max(box.y, node.x);
+            box.z = Mathf.Min(box.z, node.y);
+            box.w = Mathf.Max(box.w, node.y);
+            Debug.Log("node : " + node.x + " " + node.y + " box : " + box.x + " " + box.y + " " + box.z + " " + box.w);
+        }
     
 
         // Checks is if node(x,Y) is in the node(startx, starty) bounding box for the direction: direction
@@ -77,4 +292,3 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         }
     }
 }
-*/

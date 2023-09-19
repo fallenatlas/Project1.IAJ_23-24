@@ -81,20 +81,20 @@ public class PathfindingManager : MonoBehaviour
             this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
         else if (NodeArrayAStarAlgorithm)
             this.pathfinding = new NodeArrayAStarPathfinding(new EuclideanDistance());
-        // else if (useGoalBound)
-        //     this.pathfinding = new GoalBoundAStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
+        else if (useGoalBound)
+            this.pathfinding = new GoalBoundAStarPathfinding(new ZeroHeuristic());
         else
             this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
 
         visualGrid.GridMapVisual(textLines, this.pathfinding.grid);
 
-       /* if (this.pathfinding is GoalBoundAStarPathfinding)
+       if (this.pathfinding is GoalBoundAStarPathfinding)
         {
             var p = this.pathfinding as GoalBoundAStarPathfinding;
             p.MapPreprocess();
             visualGrid.ClearGrid();
         }
-       */
+      
         pathfinding.grid.OnGridValueChanged += visualGrid.Grid_OnGridValueChange;
     }
 

@@ -29,6 +29,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         // Node Record Array Index
         public int index;
         public NodeStatus status;
+
+        public string direction;
         
         
         public override string ToString()
