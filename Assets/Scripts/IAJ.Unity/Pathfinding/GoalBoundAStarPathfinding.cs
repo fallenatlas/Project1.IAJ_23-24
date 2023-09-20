@@ -66,10 +66,14 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             
             CurrentNode.GetNeighbourList(grid).ForEach(neighbour => {
                 neighbour.direction = GetDirectionFromNeighbour(CurrentNode, neighbour);
+                Debug.Log("Setting direction for " + neighbour.x + " " + neighbour.y + " : " + neighbour.direction);
+                neighbour.gCost = CalculateDistanceCost(CurrentNode, neighbour);
+                neighbour.CalculateFCost();
                 Open.AddToOpen(neighbour);
             });
             Closed.AddToClosed(CurrentNode);
             CurrentNode.gCost = 0;
+            CurrentNode.CalculateFCost();
             Debug.Log("Flooding for " + original.x + " " + original.y);
             while (Open.CountOpen() > 0)
             {
@@ -78,20 +82,23 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 CurrentNode = Open.GetBestAndRemove();
                 Closed.AddToClosed(CurrentNode);
 
-                Debug.Log("Open " + CurrentNode.x + " " + CurrentNode.y);
+                Debug.Log("Open " + CurrentNode.x + " " + CurrentNode.y +" with cost " + CurrentNode.gCost);
 
                 //Handle the neighbours/children with something like this
                 foreach (var neighbourNode in CurrentNode.GetNeighbourList(grid)) 
                 {
                     float newGCost = CurrentNode.gCost + CalculateDistanceCost(CurrentNode, neighbourNode);
-
+                    
                     if (Closed.SearchInClosed(neighbourNode) != null)
                     {
                         if (newGCost < neighbourNode.gCost)
                         {
                             Closed.RemoveFromClosed(neighbourNode);
                             neighbourNode.parent = CurrentNode;
+                            Debug.Log("Setting direction for " + neighbourNode.x + " " + neighbourNode.y + " : " + CurrentNode.direction);
+                            neighbourNode.direction = CurrentNode.direction;
                             neighbourNode.gCost = newGCost;
+                            Debug.Log("Neighbour " + neighbourNode.x + " " + neighbourNode.y + " with g " + newGCost);
                             neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                             neighbourNode.CalculateFCost();
                             Open.AddToOpen(neighbourNode);
@@ -104,6 +111,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                         if (newGCost < neighbourNode.gCost)
                         {
                             neighbourNode.parent = CurrentNode;
+                            neighbourNode.direction = CurrentNode.direction;
+                            Debug.Log("Setting direction for " + neighbourNode.x + " " + neighbourNode.y + " : " + CurrentNode.direction);
+                            Debug.Log("Neighbour " + neighbourNode.x + " " + neighbourNode.y + " with g " + newGCost);
                             neighbourNode.gCost = newGCost;
                             neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                             neighbourNode.CalculateFCost();
@@ -112,13 +122,13 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     else
                     {
                         neighbourNode.parent = CurrentNode;
+                        neighbourNode.direction = CurrentNode.direction;
+                        Debug.Log("Setting direction for " + neighbourNode.x + " " + neighbourNode.y + " : " + CurrentNode.direction);
+                        Debug.Log("Neighbour " + neighbourNode.x + " " + neighbourNode.y + " with g " + newGCost);
                         neighbourNode.gCost = newGCost;
                         neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                         neighbourNode.CalculateFCost();
                         Open.AddToOpen(neighbourNode);
-                    }
-                    if (Open.SearchInOpen(neighbourNode) != null &&  neighbourNode.direction == null) {
-                        neighbourNode.direction = CurrentNode.direction;
                     }
                 }
             }
