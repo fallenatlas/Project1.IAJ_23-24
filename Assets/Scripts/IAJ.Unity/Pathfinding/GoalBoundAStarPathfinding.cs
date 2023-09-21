@@ -14,6 +14,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         // You can create a bounding box in several differente ways, this is simply suggestion
         // Goal Bounding Box for each Node  direction - Bounding limits: minX, maxX, minY, maxY
         public Dictionary<Vector2,Dictionary<string, Vector4>> goalBounds;
+        static Mutex iMutex = new Mutex();
+        static Mutex jMutex = new Mutex();
 
         public GoalBoundAStarPathfinding(IHeuristic heuristic) : base(heuristic)
         {
@@ -33,22 +35,31 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     NodeRecord node = grid.GetGridObject(j, i);
 
                     if (node.isWalkable)
-                    { 
-                        /* new Thread(() => { */
-                        Grid<NodeRecord> gridCopy = new Grid<NodeRecord>((Grid<NodeRecord> global, int x, int y) => new NodeRecord(x, y));
-                        grid.getAll().ForEach(node => {
-                            if (!node.isWalkable) {
-                                gridCopy.GetGridObject(node.x, node.y).isWalkable = false;
-                            }
-                        });
-                        NodeRecord copy = gridCopy.GetGridObject(j, i);
-                        FloodFill(copy, gridCopy);
-                        Dictionary<string, Vector4> boxes = ComputeBoundingBoxes(copy, gridCopy);
-                        goalBounds.Add(new Vector2(node.x, node.y), boxes);
-                        boxes.Keys.ToList().ForEach(key => {
-                                Debug.Log("Box for " + node.x + " " + node.y + " " + key + " " + boxes[key]);
-                        });
-                        /* }).Start(); */
+                    {
+
+
+                        /* Thread thread = new Thread(new ThreadStart(() =>
+                        { */
+                            /* Grid<NodeRecord> gridCopy = new Grid<NodeRecord>((Grid<NodeRecord> global, int x, int y) => new NodeRecord(x, y));
+                            grid.getAll().ForEach(node =>
+                            {
+                                if (!node.isWalkable)
+                                {
+                                    gridCopy.GetGridObject(node.x, node.y).isWalkable = false;
+                                }
+                            }); */
+                            /* int x = int.Parse(Thread.CurrentThread.Name.Split(":")[0]);
+                            int y = int.Parse(Thread.CurrentThread.Name.Split(":")[1]); 
+                            Debug.Log("Thread " + Thread.CurrentThread.Name + " started"); */
+                            /* NodeRecord copy = gridCopy.GetGridObject(j, i); */
+                            FloodFill(node, grid);
+                            grid.getAll().ForEach(node => node.Reset());
+                        /* }))
+                        {
+                            Name = j + ":" + i
+                        };
+                        Debug.Log("Starting thread for " + j + " " + i);
+                        thread.Start(); */
                         // Calculate the bounding box and repeat
                         
                     }
@@ -63,57 +74,61 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         {
             // Quite similar to the A*Search method except the fact that there is no goal....so where does it stop?
             NodeRecord CurrentNode = original;
+            NodeRecordArray recordArray = new NodeRecordArray(grid.getAll());
+            IOpenSet open = recordArray;
+            IClosedSet closed = recordArray;
+            Dictionary<string, Vector4> boxes = new Dictionary<string, Vector4>();
             
             CurrentNode.GetNeighbourList(grid).ForEach(neighbour => {
                 neighbour.direction = GetDirectionFromNeighbour(CurrentNode, neighbour);
-                Debug.Log("Setting direction for " + neighbour.x + " " + neighbour.y + " : " + neighbour.direction);
                 neighbour.gCost = CalculateDistanceCost(CurrentNode, neighbour);
                 neighbour.CalculateFCost();
-                Open.AddToOpen(neighbour);
+                open.AddToOpen(neighbour);
+                boxes.Add(neighbour.direction, new Vector4(neighbour.x, neighbour.x, neighbour.y, neighbour.y));
             });
-            Closed.AddToClosed(CurrentNode);
+            closed.AddToClosed(CurrentNode);
             CurrentNode.gCost = 0;
             CurrentNode.CalculateFCost();
-            Debug.Log("Flooding for " + original.x + " " + original.y);
-            while (Open.CountOpen() > 0)
+            while (open.CountOpen() > 0)
             {
                
 
-                CurrentNode = Open.GetBestAndRemove();
-                Closed.AddToClosed(CurrentNode);
+                CurrentNode = open.GetBestAndRemove();
+                closed.AddToClosed(CurrentNode);
 
-                Debug.Log("Open " + CurrentNode.x + " " + CurrentNode.y +" with cost " + CurrentNode.gCost);
 
                 //Handle the neighbours/children with something like this
                 foreach (var neighbourNode in CurrentNode.GetNeighbourList(grid)) 
                 {
                     float newGCost = CurrentNode.gCost + CalculateDistanceCost(CurrentNode, neighbourNode);
                     
-                    if (Closed.SearchInClosed(neighbourNode) != null)
+                    if (closed.SearchInClosed(neighbourNode) != null)
                     {
                         if (newGCost < neighbourNode.gCost)
                         {
-                            Closed.RemoveFromClosed(neighbourNode);
+                            closed.RemoveFromClosed(neighbourNode);
                             neighbourNode.parent = CurrentNode;
-                            Debug.Log("Setting direction for " + neighbourNode.x + " " + neighbourNode.y + " : " + CurrentNode.direction);
                             neighbourNode.direction = CurrentNode.direction;
+                            Vector4 box = boxes[neighbourNode.direction]; // pass Vector4 by reference
+                            UpdateBox(neighbourNode, ref box);
+                            boxes[neighbourNode.direction] = box;
                             neighbourNode.gCost = newGCost;
-                            Debug.Log("Neighbour " + neighbourNode.x + " " + neighbourNode.y + " with g " + newGCost);
                             neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                             neighbourNode.CalculateFCost();
-                            Open.AddToOpen(neighbourNode);
+                            open.AddToOpen(neighbourNode);
                         }
                     }
 
                     //If in Open..
-                    else if (Open.SearchInOpen(neighbourNode) != null)
+                    else if (open.SearchInOpen(neighbourNode) != null)
                     {
                         if (newGCost < neighbourNode.gCost)
                         {
                             neighbourNode.parent = CurrentNode;
                             neighbourNode.direction = CurrentNode.direction;
-                            Debug.Log("Setting direction for " + neighbourNode.x + " " + neighbourNode.y + " : " + CurrentNode.direction);
-                            Debug.Log("Neighbour " + neighbourNode.x + " " + neighbourNode.y + " with g " + newGCost);
+                            Vector4 box = boxes[neighbourNode.direction]; // pass Vector4 by reference
+                            UpdateBox(neighbourNode, ref box);
+                            boxes[neighbourNode.direction] = box;
                             neighbourNode.gCost = newGCost;
                             neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                             neighbourNode.CalculateFCost();
@@ -123,38 +138,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     {
                         neighbourNode.parent = CurrentNode;
                         neighbourNode.direction = CurrentNode.direction;
-                        Debug.Log("Setting direction for " + neighbourNode.x + " " + neighbourNode.y + " : " + CurrentNode.direction);
-                        Debug.Log("Neighbour " + neighbourNode.x + " " + neighbourNode.y + " with g " + newGCost);
+                        Vector4 box = boxes[neighbourNode.direction]; // pass Vector4 by reference
+                        UpdateBox(neighbourNode, ref box);
+                        boxes[neighbourNode.direction] = box;
                         neighbourNode.gCost = newGCost;
                         neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                         neighbourNode.CalculateFCost();
-                        Open.AddToOpen(neighbourNode);
+                        open.AddToOpen(neighbourNode);
                     }
                 }
             }
-            grid.getAll().ForEach(node => {
-                if (node.Equals(original)) return;
-                Debug.Log("node at " + node.x + " " + node.y + " with " + node.direction);
-            });
-            //At the end it is important to "clean" the Open and Closed Set
-            this.Open.Initialize();
-            this.Closed.Initialize();
-        }
-
-        public Dictionary<string, Vector4> ComputeBoundingBoxes(NodeRecord original, Grid<NodeRecord> grid) {
-            Dictionary<string, Vector4> boxes = new Dictionary<string, Vector4>();
-            grid.getAll().ForEach(node => {
-                if (node.Equals(original) || ! node.isWalkable) return;
-                if (! boxes.ContainsKey(node.direction)) {
-                    boxes.Add(node.direction, new Vector4(node.x, node.x, node.y, node.y));
-                }
-                else {
-                    Vector4 box = boxes[node.direction]; // pass Vector4 by reference
-                    UpdateBox(node, ref box);
-                    boxes[node.direction] = box;
-                }
-            });
-            return boxes;
+            goalBounds.Add(new Vector2(original.x, original.y), boxes);
         }
 
         public override bool Search(out List<NodeRecord> solution, bool returnPartialSolution = false) {
@@ -273,12 +267,10 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         } */
 
         private void UpdateBox(NodeRecord node, ref Vector4 box) {
-            Debug.Log("node : " + node.x + " " + node.y + " box : " + box.x + " " + box.y + " " + box.z + " " + box.w);
             box.x = Mathf.Min(box.x, node.x);
             box.y = Mathf.Max(box.y, node.x);
             box.z = Mathf.Min(box.z, node.y);
             box.w = Mathf.Max(box.w, node.y);
-            Debug.Log("node : " + node.x + " " + node.y + " box : " + box.x + " " + box.y + " " + box.z + " " + box.w);
         }
     
 
