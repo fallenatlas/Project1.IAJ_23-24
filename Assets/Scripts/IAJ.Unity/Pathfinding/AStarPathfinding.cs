@@ -127,7 +127,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         {
 
             float newGCost = parentNode.gCost + CalculateDistanceCost(parentNode, node);
-
+            
             if (Closed.SearchInClosed(node) != null)
             {
                 if (newGCost < node.gCost)
@@ -198,7 +198,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         {
             List<NodeRecord> path = new List<NodeRecord>();
             path.Add(endNode);
-
+            
             var current = endNode.parent;
             while (current != null)
             {

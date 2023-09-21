@@ -18,7 +18,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             
             for(int i = 0; i < nodes.Count; i++)
             {
-                this.NodeRecords[i] = new NodeRecord(nodes[i].x, nodes[i].y) {index = i };
+                this.NodeRecords[i] = nodes[i];
             }
 
             this.Open = new NodePriorityHeap();
@@ -32,18 +32,18 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         void IOpenSet.Initialize()
         {
             this.Open.Initialize();
+            
             //we want this to be very efficient (that's why we use for)
             for (int i = 0; i < this.NodeRecords.Length; i++)
             {
                 if(NodeRecords[i].isWalkable)
                 this.NodeRecords[i].status = NodeStatus.Unvisited;
             }
-
         }
 
         void IClosedSet.Initialize()
         {
-        
+            
         }
 
         public void AddToOpen(NodeRecord nodeRecord)
