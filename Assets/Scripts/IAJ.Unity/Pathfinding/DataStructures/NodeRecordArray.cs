@@ -18,7 +18,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             
             for(int i = 0; i < nodes.Count; i++)
             {
-                this.NodeRecords[i] = new NodeRecord(nodes[i].x, nodes[i].y) {index = i };
+                this.NodeRecords[i] = nodes[i];
             }
 
             this.Open = new NodePriorityHeap();
@@ -32,18 +32,18 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         void IOpenSet.Initialize()
         {
             this.Open.Initialize();
+            
             //we want this to be very efficient (that's why we use for)
             for (int i = 0; i < this.NodeRecords.Length; i++)
             {
                 if(NodeRecords[i].isWalkable)
                 this.NodeRecords[i].status = NodeStatus.Unvisited;
             }
-
         }
 
         void IClosedSet.Initialize()
         {
-        
+            
         }
 
         public void AddToOpen(NodeRecord nodeRecord)
@@ -55,20 +55,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void AddToClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
             nodeRecord.status = NodeStatus.Closed;
             NodeRecords[nodeRecord.index].status = NodeStatus.Closed;
         }
 
         public NodeRecord SearchInOpen(NodeRecord nodeRecord)
         {
-            //TODO implement
             return nodeRecord.status == NodeStatus.Open ? nodeRecord : null;
         }
 
         public NodeRecord SearchInClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
             return nodeRecord.status == NodeStatus.Closed ? nodeRecord : null;
         }
 
@@ -96,7 +93,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void RemoveFromClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
             nodeRecord.status = NodeStatus.Unvisited;
             NodeRecords[nodeRecord.index].status = NodeStatus.Unvisited;
         }

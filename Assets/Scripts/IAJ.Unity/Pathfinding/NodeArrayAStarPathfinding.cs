@@ -23,12 +23,12 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             this.Closed = this.NodeRecordArray;
 
         }
-       
+
         // In Node Array A* the only thing that changes is how you process the child node, the search occurs the exact same way so you can the parent's method
         protected override void ProcessChildNode(NodeRecord parentNode, NodeRecord neighbourNode)
         {
             float newGCost = parentNode.gCost + CalculateDistanceCost(parentNode, neighbourNode);
-
+            
             //If in Closed...
             if (NodeRecordArray.SearchInClosed(neighbourNode) != null)
             {
@@ -56,7 +56,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             {
                 neighbourNode.parent = parentNode;
                 neighbourNode.gCost = newGCost;
-                float newHCost = Heuristic.H(neighbourNode, GoalNode);
+                neighbourNode.hCost = Heuristic.H(neighbourNode, GoalNode);
                 neighbourNode.CalculateFCost();
                 NodeRecordArray.AddToOpen(neighbourNode);
             }

@@ -107,7 +107,10 @@ public class VisualGridManager : MonoBehaviour
 
     // Reset the Grid to black and white
     public void ClearGrid()
-    {
+    {   
+        foreach (NodeRecord node in this.grid.getAll())
+            node.Reset();
+
         for (int x = 0; x < this.width; x++)
             for (int y = 0; y <this.height; y++)
             {

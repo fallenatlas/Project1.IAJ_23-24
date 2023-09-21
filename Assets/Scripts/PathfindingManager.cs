@@ -232,6 +232,7 @@ public class PathfindingManager : MonoBehaviour
 
     public void InitializeSearch(int _startingX, int _startingY, int _goalX, int _goalY)
     {
+        this.visualGrid.ClearGrid();
         this.visualGrid.SetObjectColor(startingX, startingY, Color.cyan);
         this.visualGrid.SetObjectColor(goalX, goalY, Color.green);
         this.pathfinding.InitializePathfindingSearch(_startingX, _startingY, _goalX, _goalY);
