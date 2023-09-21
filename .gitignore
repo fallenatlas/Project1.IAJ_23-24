@@ -76,4 +76,5 @@ crashlytics-build.properties
 
 # report trash
 report/*.aux
+report/*.toc
 report/*.log

@@ -1,0 +1,45 @@
+\documentclass{article}
+
+\begin{titlepage}
+  \title{Report First Project IAJ}
+  \author{João Vitór
+  \and Sebastião Carvalho
+  \and Tiago Antunes}
+  \date{2023-09-21}
+\end{titlepage}
+
+\begin{document}
+  \maketitle
+  \tableofcontents
+  \newpage
+  \section{Introduction}
+  \newpage
+  \section{Basic A*}
+
+  \begin{table}[h!]
+    \begin{center}
+      \caption{Basic A* performance (Path 2)}
+      \label{tab:table1}
+      \begin{tabular}{c|c|c}
+        \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
+        \hline
+        A*Pathfinding.Search  & 1 & 21432.88\\
+        GetBestAndRemove & 2890 & 114.64\\
+        AddToOpen & 3020 & 2.54\\
+        SearchInOpen & 28291 & 759.53\\
+        RemoveFromOpen & 0 & 0\\
+        Replace & 0 & 0\\
+        AddToClosed & 2890  & 1.76\\
+        SearchInClosed & 27990 & 20319.63\\
+        RemoveFromClosed & 0 & 0\\
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+  \newpage
+  \section{NodeArray A*}\
+  \newpage
+  \section{NodeArray A* with Goal Bounding}
+  \newpage
+  \section{Bonus Level}
+\end{document}
