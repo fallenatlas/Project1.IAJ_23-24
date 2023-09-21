@@ -13,6 +13,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         Closed
     }
 
+    public enum Direction {
+        Up,
+        Down,
+        Left,
+        Right,
+        UpLeft,
+        UpRight,
+        DownLeft,
+        DownRight
+    }
+
     public class NodeRecord  : IComparable<NodeRecord>
     {
         //Coordinates
@@ -29,6 +40,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         // Node Record Array Index
         public int index;
         public NodeStatus status;
+
+        public Direction direction;
         
         
         public override string ToString()
