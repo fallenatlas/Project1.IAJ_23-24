@@ -82,7 +82,7 @@ public class PathfindingManager : MonoBehaviour
         else if (NodeArrayAStarAlgorithm)
             this.pathfinding = new NodeArrayAStarPathfinding(new EuclideanDistance());
         else if (useGoalBound)
-            this.pathfinding = new GoalBoundAStarPathfinding(new ZeroHeuristic());
+            this.pathfinding = new GoalBoundAStarPathfinding(new EuclideanDistance());
         else
             this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
 
