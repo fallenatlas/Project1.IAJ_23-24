@@ -25,7 +25,7 @@
   performance when compared to other algorithms like djikstra. Despite being a basic algorithm, it's performance can be improved by using better data structures,
   or using other optimizations like we're going to show in the next sections.\\
   \subsection{Data}
-  \begin {table}[h!]
+  \begin{table}[h!]
       \parbox{.45\linewidth}{
         \centering
         \caption{Basic A* performance (Path 1)}
@@ -33,14 +33,14 @@
         \begin{tabular}{c|c|c}
           \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
           \hline
-          A*Pathfinding.Search  & 1 & 21432.88\\
-          GetBestAndRemove & 2890 & 114.64\\
-          AddToOpen & 3020 & 2.54\\
-          SearchInOpen & 28291 & 759.53\\
+          A*Pathfinding.Search  & 1 & 10181.85\\
+          GetBestAndRemove & 1904 & 44.09\\
+          AddToOpen & 1954 & 1.82\\
+          SearchInOpen & 18564 & 269.64\\
           RemoveFromOpen & 0 & 0\\
           Replace & 0 & 0\\
-          AddToClosed & 2890  & 1.76\\
-          SearchInClosed & 27990 & 20319.63\\
+          AddToClosed & 1904  & 1.45\\
+          SearchInClosed & 18460 & 9710.25\\
           RemoveFromClosed & 0 & 0\\
         \end{tabular}
       }
@@ -63,6 +63,29 @@
           RemoveFromClosed & 0 & 0\\
         \end{tabular}
       }
+  \end{table}
+  \begin{table}[h!]
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{Basic A* grid information (Path 1)}
+        \label{tab:tableA*Grid1}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          1904 & 0.02 & 77\\
+        \end{tabular}
+    }
+    \hfil
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{Basic A* grid information (Path 2)}
+        \label{tab:tableA*Grid2}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          2889 & 0.02 & 133\\
+        \end{tabular}
+    }
   \end{table}
 
   \section{Basic A* with tiebraking}
@@ -110,8 +133,34 @@
         \end{tabular}
       }
   \end{table}
-  \newpage
-
+  \begin{table}[h!]
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{Basic A* with tiebraking grid information (Path 1)}
+        \label{tab:tableA*TiebrakingGrid1}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          1904 & 0.02 & 77\\
+        \end{tabular}
+    }
+    \hfil
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{Basic A* with tiebraking* grid information (Path 2)}
+        \label{tab:tableA*TiebrakingGrid2}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          2889 & 0.02 & 133\\
+        \end{tabular}
+    }
+  \end{table}
+  \subsection{Comparison}
+  Looking at the data from this and the previous algorithm, that there's a little optimization on the data of path 1 even though there's more spent time getting
+  the best node from the open set, due to more comparisons. In path 2 we still see an increase on the time for  GetBestAndRemove, but surprisingly there's more time spent
+  this may be due to bad measurement of data, since this contradicts what is expected. \\
+  
   \section{NodeArray A*}\
   \subsection{Algorithm}
   NodeArray A* is an A* implementation that uses a NodeArray to store the nodes. We use this array as our open and closed set, and we change the status property
@@ -127,8 +176,8 @@
         \hline
         A*Pathfinding.Search  & 1 & 5.48\\
         GetBestAndRemove & 200 & 1.96\\
-        AddToOpen & 216 & 1.13\\
-        SearchInOpen & 235 & 0\\
+        AddToOpen & 232 & 1.13\\
+        SearchInOpen & 1044 & 0.04\\
         RemoveFromOpen & 0 & 0\\
         Replace & 0 & 0\\
         AddToClosed & 100  & 0.01\\
@@ -156,6 +205,33 @@
       \end{tabular}
     }
   \end{table}
+  \begin{table}[h!]
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{NodeArray A* grid information (Path 1)}
+        \label{tab:tableNodeArrayGrid1}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          1904 & 0.4738739 & 77\\
+        \end{tabular}
+    }
+    \hfil
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{NodeArray A* grid information (Path 2)}
+        \label{tab:tableNodeArrayGrid2}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          2884 & 0.4738739 & 135\\
+        \end{tabular}
+    }
+  \end{table}
+
+  \subsection{Comparison}
+  NodeArray A* is faster than the previous algorithms, due to the fact that we can search for nodes in the open and closed set in constant time,
+  as we can see by the reduction of the SearchInOpen and SearchInClosed time, even tho it spends more time on the AddToOpen due to the use of a PriorityHeap.\\
 
   \section{NodeArray A* with Goal Bounding}
   \subsection{Algorithm}
@@ -202,8 +278,34 @@
       \end{tabular}
     }
   \end{table}
-  
-  \newpage
+  \begin{table}[h!]
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{NodeArray A* with Goal Bounding grid information (Path 1)}
+        \label{tab:tableGoalBoundingGrid1}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          228 & 0.1092952 & 9\\
+        \end{tabular}
+    }
+    \hfil
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{NodeArray A* with Goal Bounding grid information (Path 2)}
+        \label{tab:tableGoalBoundingGrid2}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          157 & 0.4738739 & 8\\
+        \end{tabular}
+    }
+  \end{table}
+
+  \subsection{Comparison}
+  Comparing this data with the previous ones, we can see that this is by far the best optimization in terms of runtime. This is due to the use of bounding boxes,
+  that shorten the amounts of nodes we process, and thus the amount of calls to add, remove and search in the open and closed set.\\
+
   \section{Bonus Level}
   \section{Conclusions}
   We can infer that A* is pretty slow when compared to it's otimizations. \\
