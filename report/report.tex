@@ -21,6 +21,9 @@
   \newpage
   \section{Basic A*}
   \subsection{Algorithm}
+  The A* is a search algorithm that uses a heuristic to find the best path between 2 nodes. Even though it's a basic algorithm, it shows relatively good 
+  performance when compared to other algorithms like djikstra. Despite being a basic algorithm, it's performance can be improved by using better data structures,
+  or using other optimizations like we're going to show in the next sections.\\
   \subsection{Data}
   \begin {table}[h!]
       \parbox{.45\linewidth}{
@@ -64,6 +67,9 @@
 
   \section{Basic A* with tiebraking}
   \subsection{Algorithm}
+  This algorithm is basically the previous one, but we use tiebraking to break ties between nodes with the same f value. This way, it makes 
+  for better ordering of the nodes in the open set, and we can get the best node faster. When 2 nodes have the same f value, 
+  we use order the nodes by smallest h value. This way we first pick the node that is closer to the goal.\\
   \subsection{Data}
   \begin{table}[h!]
       \parbox{.45\linewidth}{
@@ -108,6 +114,8 @@
 
   \section{NodeArray A*}\
   \subsection{Algorithm}
+  NodeArray A* is an A* implementation that uses a NodeArray to store the nodes. We use this array as our open and closed set, and we change the status property
+  of the nodes when we add them to the open or closed set. This way, we can search for nodes in the open and closed set in constant time.\\
   \subsection{Data}
   \begin{table}[h!]
     \parbox{.45\linewidth}{
@@ -151,6 +159,9 @@
 
   \section{NodeArray A* with Goal Bounding}
   \subsection{Algorithm}
+  By using precomputation of the grid, we can make bounding boxes for each node and improve the NodeArray A* algorithm. We do this by using djikstra to
+  calculate fastest path from each node to all other nodes. This way, we know which direction we should choose when trying to go to a specific node.
+  This optimization causes, sometimes, a heavy increase on the starting time, due to the precomputation, but it improves the runtime of the algorithm by a lot.\\ 
   \subsection{Data}
   \begin{table}[h!]
     \parbox{.45\linewidth}{
@@ -174,7 +185,7 @@
     \hfil
     \parbox{.45\linewidth}{
       \centering
-      \caption{NodeArray A* with Goal Bounding performance (Path 1)}
+      \caption{NodeArray A* with Goal Bounding performance (Path 2)}
       \label{tab:tableGoalBounding2}
       \begin{tabular}{c|c|c}
         \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
