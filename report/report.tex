@@ -90,8 +90,7 @@
 
   \section{Basic A* with tiebraking}
   \subsection{Algorithm}
-  This algorithm is basically the previous one, but we use tiebraking to break ties between nodes with the same f value. This way, it makes 
-  for better ordering of the nodes in the open set, and we can get the best node faster. When 2 nodes have the same f value, 
+  This algorithm is basically the previous one, but we use tiebraking to break ties between nodes with the same f value. When 2 nodes have the same f value, 
   we use order the nodes by smallest h value. This way we first pick the node that is closer to the goal.\\
   \subsection{Data}
   \begin{table}[h!]
@@ -231,7 +230,7 @@
 
   \subsection{Comparison}
   NodeArray A* is faster than the previous algorithms, due to the fact that we can search for nodes in the open and closed set in constant time,
-  as we can see by the reduction of the SearchInOpen and SearchInClosed time, even tho it spends more time on the AddToOpen due to the use of a PriorityHeap.\\
+  as we can see by the reduction of the SearchInOpen and SearchInClosed time, even though it spends more time on the AddToOpen due to the use of a PriorityHeap.\\
 
   \section{NodeArray A* with Goal Bounding}
   \subsection{Algorithm}
@@ -308,7 +307,9 @@
 
   \section{Bonus Level}
   \section{Conclusions}
-  We can infer that A* is pretty slow when compared to it's otimizations. \\
+  Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations make it must faster, without compromising
+  finding the best path. \\
   Also, we can notice that adding pre-processing to the algorithm can improve it's runtime by a lot, 
-  even though it takes some time to do it.
+  even though it takes some time to do it. We can see this in the use of precomputation on the Goal Bounding  algorithm and 
+  on the calculation of the Dead-End heurisitic. 
 \end{document}
