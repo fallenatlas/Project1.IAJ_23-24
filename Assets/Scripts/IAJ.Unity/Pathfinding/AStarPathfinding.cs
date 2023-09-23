@@ -65,7 +65,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             {
                 gCost = 0,
                 hCost = this.Heuristic.H(this.StartNode, this.GoalNode),
-                index = StartNode.index
+                index = StartNode.index,
+                cluster = this.StartNode.cluster
             };
 
             initialNode.CalculateFCost();
@@ -78,7 +79,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
 
             var ProcessedNodes = 0;
             NodeRecord CurrentNode;
-
+            
             //While Open is not empty or if nodes havent been all processed 
             while (Open.CountOpen() > 0)
             {
@@ -156,7 +157,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             {
                 node.parent = parentNode;
                 node.gCost = newGCost;
-                node.hCost = Heuristic.H(node, GoalNode);
+                if (node.hCost == 0)
+                    node.hCost = Heuristic.H(node, GoalNode);
                 node.CalculateFCost();
                 Open.AddToOpen(node);
             }

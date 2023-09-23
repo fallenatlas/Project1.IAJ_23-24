@@ -1,6 +1,7 @@
 using Assets.Scripts.Grid;
 using Assets.Scripts.IAJ.Unity.Pathfinding;
 using Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -195,6 +196,18 @@ public class VisualGridManager : MonoBehaviour
         }
     }
 
+    public void DrawClusters()
+    {
+        List<Color> colors = new List<Color>();
+        for (int i = 0; i < 200; i++) {
+            colors.Add(new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f)));
+        }
+
+        foreach (var node in grid.getAll()) {
+            if (node.cluster == 0) continue;
+            this.SetObjectColor(node.x, node.y, colors[node.cluster - 1]);
+        }
+    }
 
     // Method that computes the bounding box according to the colors defined in the inspector
     /*public void fillBoundingBox(NodeRecord node)
