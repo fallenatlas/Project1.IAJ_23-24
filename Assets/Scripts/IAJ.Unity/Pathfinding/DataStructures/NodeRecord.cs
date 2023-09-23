@@ -21,7 +21,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         UpLeft,
         UpRight,
         DownLeft,
-        DownRight
+        DownRight,
+        Unknown // This should never happen
     }
 
     public class NodeRecord  : IComparable<NodeRecord>
