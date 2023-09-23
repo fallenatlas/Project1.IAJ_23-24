@@ -39,7 +39,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             this.Closed = closed;
             this.InProgress = false;
             this.Heuristic = heuristic;
-            this.NodesPerSearch = 10000; //by default we process all nodes in a single request, but you should change this
+            this.NodesPerSearch = 100; //by default we process all nodes in a single request, but you should change this
 
         }
         public virtual void InitializePathfindingSearch(int startX, int startY, int goalX, int goalY)

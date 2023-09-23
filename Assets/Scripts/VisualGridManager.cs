@@ -203,37 +203,9 @@ public class VisualGridManager : MonoBehaviour
             colors.Add(new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f)));
         }
 
-        foreach (var node in grid.getAll())
-        {
+        foreach (var node in grid.getAll()) {
             if (node.cluster == 0) continue;
             this.SetObjectColor(node.x, node.y, colors[node.cluster - 1]);
-            /* if (node.cluster % 13 == 0)
-                this.SetObjectColor(node.x, node.y, Color.yellow);
-            else if (node.cluster % 13 == 1)
-                this.SetObjectColor(node.x, node.y, Color.red);
-            else if (node.cluster % 13 == 2)
-                this.SetObjectColor(node.x, node.y, Color.blue);
-            else if (node.cluster % 13 == 3)
-                this.SetObjectColor(node.x, node.y, Color.cyan);
-            else if (node.cluster % 13 == 4)
-                this.SetObjectColor(node.x, node.y, Color.green);
-            else if (node.cluster % 13 == 5)
-                this.SetObjectColor(node.x, node.y, Color.grey);
-            else if (node.cluster % 13 == 6)
-                this.SetObjectColor(node.x, node.y, Color.magenta);
-            else if (node.cluster % 13 == 7)
-                this.SetObjectColor(node.x, node.y, new Color(1, 1, 0));
-            else if (node.cluster % 13 == 8)
-                this.SetObjectColor(node.x, node.y, new Color(1, 0, 1));
-            else if (node.cluster % 13 == 9)
-                this.SetObjectColor(node.x, node.y, new Color(0, 1, 1));
-            else if (node.cluster % 13 == 10)
-                this.SetObjectColor(node.x, node.y, new Color(0.5f, 0.5f, 0));
-            else if (node.cluster % 13 == 11)
-                this.SetObjectColor(node.x, node.y, new Color(0.5f, 0, 0.5f));
-            else
-                this.SetObjectColor(node.x, node.y, new Color(0, 0.5f, 0.5f)); */
-    
         }
     }
 
