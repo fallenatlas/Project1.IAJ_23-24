@@ -14,13 +14,13 @@
   \maketitle
   \section{Introduction}
   The goal of this project was to create different levels of path finding algorithms, and compare their performance.\\
-  We compared 4 differente algorithms: Basic A*(unordered list for open set, unordered list for closed set), Basic A* but using tiebreaking 
+  We compared 4 differente algorithms: Basic A* (unordered list for open set, unordered list for closed set), Basic A* but using tiebreaking 
   (unordered list for open set, unordered list for closed set), NodeArray A* (NodeArray for open and closed set) 
   and NodeArray A* with Goal Bounding.\\
   \section{Basic A*}
   \subsection{Algorithm}
   The A* is a search algorithm that uses a heuristic to find the best path between 2 nodes. Even though it's a basic algorithm, it shows relatively good 
-  performance when compared to other algorithms like djikstra. Despite being a basic algorithm, it's performance can be improved by using better data structures,
+  performance when compared to other algorithms like djikstra. It's also a very modular algorithm, meaning, it's performance can be improved by using better data structures,
   or using other optimizations like we're going to show in the next sections.\\
   \subsection{Data}
   \begin{table}[h!]
@@ -85,17 +85,23 @@
         \end{tabular}
     }
   \end{table}
+  \subsection{Initial Analysis}
+  The algorithm performs quite well, even in it's most basic form. It spends most time searching in 
+  the closed set, because in the neighbour processing we start by searching if it's in it. Searching 
+  in the open list is the second most time consuming operation. The algorithm also has a big fill, 
+  which accentuates the cost of the previously mentioned operations.\\
 
-  \section{Basic A* with tiebraking}
+  \section{Basic A* with tiebreaking}
   \subsection{Algorithm}
-  This algorithm is basically the previous one, but we use tiebraking to break ties between nodes with the same f value. When 2 nodes have the same f value, 
-  they are ordered by smallest h value. This way we first pick the node that is closer to the goal.\\
+  This algorithm is the same as the previous one, but we use tiebreaking between nodes with the same 
+  f value. We choose to prefer nodes with lower h cost, so that we pick the node that is closer to the goal. 
+  This way, we can reduce the number of explored nodes, by still choosing a node over the other, instead of randomly exploring one of them.\\
   \subsection{Data}
   \begin{table}[h!]
       \parbox{.45\linewidth}{
         \centering
-        \caption{Basic A* with tiebraking performance (Path 1)}
-        \label{tab:tableTieBraking1}
+        \caption{Basic A* with tiebreaking performance (Path 1)}
+        \label{tab:tableTieBreaking1}
         \begin{tabular}{c|c|c}
           \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
           \hline
@@ -113,8 +119,8 @@
       \hfil
       \parbox{.45\linewidth}{
         \centering
-        \label{tab:tableTieBraking2}
-        \caption{Basic A* with tiebraking performance (Path 2)}
+        \label{tab:tableTieBreaking2}
+        \caption{Basic A* with tiebreaking performance (Path 2)}
         \begin{tabular}{c|c|c}
           \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
           \hline
@@ -133,8 +139,8 @@
   \begin{table}[h!]
     \parbox{.45\linewidth}{
         \centering
-        \caption{Basic A* with tiebraking grid information (Path 1)}
-        \label{tab:tableA*TiebrakingGrid1}
+        \caption{Basic A* with tiebreaking grid information (Path 1)}
+        \label{tab:tableA*TiebreakingGrid1}
         \begin{tabular}{c|c|c}
           \textbf{TotalPNodes} & \textbf{MaxOpenNodes} & \textbf{Fill}\\
           \hline
@@ -144,8 +150,8 @@
     \hfil
     \parbox{.45\linewidth}{
         \centering
-        \caption{Basic A* with tiebraking* grid information (Path 2)}
-        \label{tab:tableA*TiebrakingGrid2}
+        \caption{Basic A* with tiebreaking* grid information (Path 2)}
+        \label{tab:tableA*TiebreakingGrid2}
         \begin{tabular}{c|c|c}
           \textbf{TotalPNodes} & \textbf{MaxOpenNodes} & \textbf{Fill}\\
           \hline
@@ -154,14 +160,13 @@
     }
   \end{table}
   \subsection{Comparison}
-  Looking at the data from this and the previous algorithm, there's a little optimization on the data of path 1 even though there's more time spent getting
-  the best node from the open set, due to more comparisons. In path 2 we still see an increase in time for GetBestAndRemove, but surprisingly it takes longer. 
-  This may be due to bad data measurements, since this contradicts what is expected. \\
+  In the chosen paths we saw no gains by adding tiebreaking, this may be because there are no ties in these paths. Also, there's more time spent getting 
+  the best node from the open set, due to more comparisons.\\
   
   \section{NodeArray A*}\
   \subsection{Algorithm}
-  NodeArray A* is an A* implementation that uses a NodeArray to store the nodes. We use this array as our open and closed set, and we change the status property
-  of the nodes when we add them to the open or closed set. This way, we can search for nodes in the open and closed set in constant time.\\
+  NodeArray A* is an A* implementation that uses a NodeArray to store all the nodes. We use this array to keep track of what nodes are in our open and closed set, 
+  and we change the status property of the nodes when we add them to the open or closed set. This way, we can search if nodes are in the open and closed sets in constant time.\\
   \subsection{Data}
   \begin{table}[h!]
     \parbox{.45\linewidth}{
@@ -227,14 +232,16 @@
   \end{table}
 
   \subsection{Comparison}
-  NodeArray A* is faster than the previous algorithms, due to the fact that we can search for nodes in the open and closed set in constant time,
-  as we can see by the reduction of the SearchInOpen and SearchInClosed time, even though it spends more time on the AddToOpen due to the use of a PriorityHeap.\\
+  NodeArray A* is faster than the previous algorithms, due to the fact that we can search for nodes in the open and closed set in constant time, 
+  as we can see by the reduction of the SearchInOpen and SearchInClosed time, which were the 2 most time consuming operations in the previous versions. 
+  On the other hand, we see and increase in the time spent on the AddToOpen due to the use of a PriotrityHeap, which has higher insertion time, 
+  but the reduction in search times heavily outweights this increase.\\
 
   \section{NodeArray A* with Goal Bounding}
   \subsection{Algorithm}
-  By using a precomputation of the grid, we can make bounding boxes for each node and improve the NodeArray A* algorithm. We do this by using djikstra to
+  By using precomputation of the grid, we can make bounding boxes for each node and improve the NodeArray A* algorithm. We do this by using djikstra to
   calculate fastest path from each node to all other nodes. This way, we know which direction we should choose when trying to go to a specific node.
-  This optimization causes, a heavy increase on the starting time due to the precomputation, but it improves the runtime of the algorithm by a lot.\\ 
+  This optimization causes an increase on the starting time, due to the precomputation, but it can significantly improve the runtime performance of the algorithm.\\
   
   \subsection{Data}
   \begin{table}[h!]
@@ -379,9 +386,13 @@
 
 
   \section{Conclusions}
-  Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations make it much faster, without compromising
-  finding the best path. \\
-  Also, we can notice that adding pre-processing to the algorithm can improve it's runtime by a lot, 
-  even though it takes some time to do so. We can see this in the use of precomputation on the Goal Bounding algorithm and 
-  on the calculation of the Dead-End heurisitic. 
+  Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations can make it much faster, 
+  without compromising finding the best path.\\
+  Implementing better data structures that significantly reduce time spend on commonly used operations, like in the case of the Array Node A*, 
+  gave good results, but we still explored many nodes which were not part of the best path.\\
+  Then, we saw that adding preprocessing to the algorithm can improve it's runtime performance a lot, although it can take some time to perform it, 
+  especially on bigger maps, with many nodes. This is the case with goal bouding and the calculation of the Dead-End heurisitic.\\
+  The combination of the search efficiency of the Array Node A* with bouding boxes, which significantly reduced the nodes explored 
+  in directions other than the desired one, resolved both main issues with the basic A* algorithm. Due to this, goal bouding proved to be the best algorithm.
+
 \end{document}
