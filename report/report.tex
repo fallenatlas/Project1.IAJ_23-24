@@ -341,19 +341,19 @@
     \hfil
     \parbox{.45\linewidth}{
       \centering
-      \caption{NodeArray A* with Goal Bounding performance (Path 3)}
+      \caption{Basic A* with Dead-End performance (Path 3)}
       \label{tab:tableDeadEnd3}
       \begin{tabular}{c|c|c}
         \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
         \hline
-        A*Pathfinding.Search  & 1 & 17.12\\
-        GetBestAndRemove & 158 & 0.40\\
-        AddToOpen & 165 & 0.35\\
-        SearchInOpen & 388 & 0.01\\
+        A*Pathfinding.Search  & 1 & 196.75\\
+        GetBestAndRemove & 1497 & 14.89\\
+        AddToOpen & 1541 & 3.91\\
+        SearchInOpen & 14788 & 2.21\\
         RemoveFromOpen & 0 & 0\\
         Replace & 0 & 0\\
-        AddToClosed & 158 & 0.03\\
-        SearchInClosed & 282 & 0.01\\
+        AddToClosed & 1497 & 3.17\\
+        SearchInClosed & 14691 & 20.45\\
         RemoveFromClosed & 0 & 0\\
       \end{tabular}
     }
@@ -372,12 +372,12 @@
     \hfil
     \parbox{.45\linewidth}{
         \centering
-        \caption{NodeArray A* with Goal Bounding grid information (Path 3)}
+        \caption{Basic A* with Dead-End grid information (Path 3)}
         \label{tab:tableDeadEndGrid3}
         \begin{tabular}{c|c|c}
           \textbf{TotalPNodes} & \textbf{MaxOpenNodes} & \textbf{Fill}\\
           \hline
-          157 & 8 & Large\\
+          1496 & 78 & Large\\
         \end{tabular}
     }
   \end{table}
