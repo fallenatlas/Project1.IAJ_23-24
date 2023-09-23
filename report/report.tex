@@ -20,7 +20,7 @@
   \section{Basic A*}
   \subsection{Algorithm}
   The A* is a search algorithm that uses a heuristic to find the best path between 2 nodes. Even though it's a basic algorithm, it shows relatively good 
-  performance when compared to other algorithms like djikstra. It's also a very modular algorithm, meaning its performance can be improved by using better data structures,
+  performance when compared to other algorithms like djikstra. It's also a very modular algorithm, meaning, it's performance can be improved by using better data structures,
   or using other optimizations like we're going to show in the next sections.\\
   \subsection{Data}
   \begin{table}[h!]
@@ -86,16 +86,16 @@
     }
   \end{table}
   \subsection{Initial Analysis}
-  The algorithm performs quite well, even in its most basic form. Most of the time is spent searching in 
-  the closed set, because we start by searching it when processing a node's neighbors. Searching 
+  The algorithm performs quite well, even in it's most basic form. It spends most time searching in 
+  the closed set, because in the neighbour processing we start by searching if it's in it. Searching 
   in the open list is the second most time consuming operation. The algorithm also has a big fill, 
   which accentuates the cost of the previously mentioned operations.\\
 
   \section{Basic A* with tiebreaking}
   \subsection{Algorithm}
   This algorithm is the same as the previous one, but we use tiebreaking between nodes with the same 
-  f value. We chose to prioritize nodes with lower h cost, so that we pick the node that is closer to the goal. 
-  This way, we can reduce the number of explored nodes by choosing a node over the other, instead of randomly exploring one of them.\\
+  f value. We choose to prefer nodes with lower h cost, so that we pick the node that is closer to the goal. 
+  This way, we can reduce the number of explored nodes, by still choosing a node over the other, instead of randomly exploring one of them.\\
   \subsection{Data}
   \begin{table}[h!]
       \parbox{.45\linewidth}{
@@ -316,13 +316,13 @@
   \subsection{Algorithm}
   For the Bonus Level, we implemented the A* algorithm with the Dead-End heuristic. This heuristic is calculated by using a precomputation of the grid, where we
   create clusters for each room. This clusters are created using a floodfill in the beginning of the precomputation. At runtime, we calculate the possible paths 
-  in the room graph and update the heurisitic.\\
+  in the room graph and update the heurisitic. This algorithm is based on the A* version that uses PriorityHeap for open set and Dictionary for closed set.\\
   
   \subsection{Data}
   \begin{table}[h!]
     \parbox{.45\linewidth}{
       \centering
-      \caption{NodeArray A* with Goal Bounding performance (Path 2)}
+      \caption{A* with Dead-End performance (Path 2)}
       \label{tab:tableDeadEnd2}
       \begin{tabular}{c|c|c}
         \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
@@ -341,7 +341,7 @@
     \hfil
     \parbox{.45\linewidth}{
       \centering
-      \caption{Basic A* with Dead-End performance (Path 3)}
+      \caption{A* with Dead-End performance (Path 3)}
       \label{tab:tableDeadEnd3}
       \begin{tabular}{c|c|c}
         \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
@@ -361,7 +361,7 @@
   \begin{table}[h!]
     \parbox{.45\linewidth}{
         \centering
-        \caption{NodeArray A* with Goal Bounding grid information (Path 2)}
+        \caption{A* with Dead-End grid information (Path 2)}
         \label{tab:tableDeadEndGrid2}
         \begin{tabular}{c|c|c}
           \textbf{TotalPNodes} & \textbf{MaxOpenNodes} & \textbf{Fill}\\
@@ -372,7 +372,7 @@
     \hfil
     \parbox{.45\linewidth}{
         \centering
-        \caption{Basic A* with Dead-End grid information (Path 3)}
+        \caption{A* with Dead-End grid information (Path 3)}
         \label{tab:tableDeadEndGrid3}
         \begin{tabular}{c|c|c}
           \textbf{TotalPNodes} & \textbf{MaxOpenNodes} & \textbf{Fill}\\
