@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage[a4paper, total={7.4in, 10in}]{geometry}
 
 \begin{titlepage}
@@ -52,7 +53,7 @@
           \hline
           A*Pathfinding.Search  & 1 & 21432.88\\
           GetBestAndRemove & 2890 & 114.64\\
-          AddToOpen & 3020 & 2.54\\
+          AddToOpen & 3021 & 2.54\\
           SearchInOpen & 28291 & 759.53\\
           RemoveFromOpen & 0 & 0\\
           Replace & 0 & 0\\
@@ -163,11 +164,12 @@
   In the chosen paths we saw no gains by adding tiebreaking, this may be because there are no ties in these paths. Also, there's more time spent getting 
   the best node from the open set, due to more comparisons.\\
   
-  \section{NodeArray A*}\
+  \section{NodeArray A*}
   \subsection{Algorithm}
   NodeArray A* is an A* implementation that uses a NodeArray to store all the nodes. We use this array to keep track of what nodes are in our open and closed set, 
   and we change the status property of the nodes when we add them to the open or closed set. This way, we can search if nodes are in the open and closed sets in constant time.\\
-  \subsection{Data}
+  
+  \subsection{Data (Next Page)}
   \begin{table}[h!]
     \parbox{.45\linewidth}{
       \centering
@@ -234,7 +236,7 @@
   \subsection{Comparison}
   NodeArray A* is faster than the previous algorithms, due to the fact that we can search for nodes in the open and closed set in constant time, 
   as we can see by the reduction of the SearchInOpen and SearchInClosed time, which were the 2 most time consuming operations in the previous versions. 
-  On the other hand, we see and increase in the time spent on the AddToOpen due to the use of a PriotrityHeap, which has higher insertion time, 
+  On the other hand, we see an increase in the time spent on the AddToOpen due to the use of a PriotrityHeap, which has higher insertion time, 
   but the reduction in search times heavily outweights this increase.\\
 
   \section{NodeArray A* with Goal Bounding}
@@ -384,7 +386,7 @@
 
   \subsection{Comparison}
   We can see in the data that the Dead-End heuristic is a good heuristic, since it improves the time of Search function, which is the most time consuming function 
-  in the A* algorithm, even though it has a big initializaation cost calculating the DFS in the room graph. But it's still not a big optimization, since it shows 
+  in the A* algorithm, even though it has a big initialization cost calculating the DFS in the room graph. But it's still not a big optimization, since it shows 
   results worse than NodeArray A*.\\
 
   \section{Conclusions}
