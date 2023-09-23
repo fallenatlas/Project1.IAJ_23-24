@@ -4,7 +4,7 @@
 
 \begin{titlepage}
   \title{Report First Project IAJ}
-  \author{João Vitór
+  \author{João Vítor
   \and Sebastião Carvalho
   \and Tiago Antunes}
   \date{2023-09-21}
@@ -89,7 +89,7 @@
   \section{Basic A* with tiebraking}
   \subsection{Algorithm}
   This algorithm is basically the previous one, but we use tiebraking to break ties between nodes with the same f value. When 2 nodes have the same f value, 
-  we use order the nodes by smallest h value. This way we first pick the node that is closer to the goal.\\
+  they are ordered by smallest h value. This way we first pick the node that is closer to the goal.\\
   \subsection{Data}
   \begin{table}[h!]
       \parbox{.45\linewidth}{
@@ -154,9 +154,9 @@
     }
   \end{table}
   \subsection{Comparison}
-  Looking at the data from this and the previous algorithm, that there's a little optimization on the data of path 1 even though there's more spent time getting
-  the best node from the open set, due to more comparisons. In path 2 we still see an increase on the time for  GetBestAndRemove, but surprisingly there's more time spent
-  this may be due to bad measurement of data, since this contradicts what is expected. \\
+  Looking at the data from this and the previous algorithm, there's a little optimization on the data of path 1 even though there's more time spent getting
+  the best node from the open set, due to more comparisons. In path 2 we still see an increase in time for GetBestAndRemove, but surprisingly it takes longer. 
+  This may be due to bad data measurements, since this contradicts what is expected. \\
   
   \section{NodeArray A*}\
   \subsection{Algorithm}
@@ -232,9 +232,9 @@
 
   \section{NodeArray A* with Goal Bounding}
   \subsection{Algorithm}
-  By using precomputation of the grid, we can make bounding boxes for each node and improve the NodeArray A* algorithm. We do this by using djikstra to
+  By using a precomputation of the grid, we can make bounding boxes for each node and improve the NodeArray A* algorithm. We do this by using djikstra to
   calculate fastest path from each node to all other nodes. This way, we know which direction we should choose when trying to go to a specific node.
-  This optimization causes, sometimes, a heavy increase on the starting time, due to the precomputation, but it improves the runtime of the algorithm by a lot.\\ 
+  This optimization causes, a heavy increase on the starting time due to the precomputation, but it improves the runtime of the algorithm by a lot.\\ 
   
   \subsection{Data}
   \begin{table}[h!]
@@ -379,9 +379,9 @@
 
 
   \section{Conclusions}
-  Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations make it must faster, without compromising
+  Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations make it much faster, without compromising
   finding the best path. \\
   Also, we can notice that adding pre-processing to the algorithm can improve it's runtime by a lot, 
-  even though it takes some time to do it. We can see this in the use of precomputation on the Goal Bounding  algorithm and 
+  even though it takes some time to do so. We can see this in the use of precomputation on the Goal Bounding algorithm and 
   on the calculation of the Dead-End heurisitic. 
 \end{document}
