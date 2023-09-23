@@ -42,6 +42,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         public NodeStatus status;
 
         public Direction direction;
+
+        //DeadEnd Stuff
+        public int cluster;
         
         
         public override string ToString()
@@ -60,6 +63,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             parent = null;
             index = 0;
             isWalkable = true;
+            cluster = 0;
 
 
         }
@@ -142,6 +146,10 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             fCost = gCost + hCost;
             parent = null;
             status = NodeStatus.Unvisited;
+        }
+
+        public bool Available() {
+            return cluster == 0 && this.isWalkable;
         }
 
     }
