@@ -45,6 +45,7 @@ public class PathfindingManager : MonoBehaviour
     public bool AStarAlgorithm;
     public bool NodeArrayAStarAlgorithm;
     public bool useGoalBound;
+    public bool useDeadEnd;
    
     //Grid configuration
     public static int width;
@@ -83,6 +84,8 @@ public class PathfindingManager : MonoBehaviour
             this.pathfinding = new NodeArrayAStarPathfinding(new EuclideanDistance());
         else if (useGoalBound)
             this.pathfinding = new GoalBoundAStarPathfinding(new EuclideanDistance());
+        else if (useDeadEnd)
+            this.pathfinding = new DeadEndPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
         else
             this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
 
@@ -91,6 +94,11 @@ public class PathfindingManager : MonoBehaviour
        if (this.pathfinding is GoalBoundAStarPathfinding)
         {
             var p = this.pathfinding as GoalBoundAStarPathfinding;
+            p.MapPreprocess();
+            visualGrid.ClearGrid();
+        }
+        else if (this.pathfinding is DeadEndPathfinding) {
+            var p = this.pathfinding as DeadEndPathfinding;
             p.MapPreprocess();
             visualGrid.ClearGrid();
         }
@@ -168,8 +176,8 @@ public class PathfindingManager : MonoBehaviour
             {
                 this.pathfinding.InProgress = false;
                 this.visualGrid.DrawPath(this.solution);
+                //this.visualGrid.DrawClusters();
             }
-
             if (partialPath && !finished)
             {
                 this.visualGrid.DrawPath(this.solution);

@@ -109,7 +109,7 @@ namespace Assets.Scripts.Grid
         {
             return gridArray.Cast<TGridObject>().ToList();
         }
-     
+        
     }
 
 }
