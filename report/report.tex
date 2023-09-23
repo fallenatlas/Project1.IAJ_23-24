@@ -327,15 +327,15 @@
       \begin{tabular}{c|c|c}
         \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
         \hline
-        A*Pathfinding.Search  & 1 & 10.62\\
-        GetBestAndRemove & 200 & 0.43\\
-        AddToOpen & 216 & 0.34\\
-        SearchInOpen & 235 & 0\\
+        A*Pathfinding.Search  & 1 & 356.91 ms\\
+        GetBestAndRemove & 1760 & 22.70\\
+        AddToOpen & 1868 & 5.56\\
+        SearchInOpen & 17434 & 210.4\\
         RemoveFromOpen & 0 & 0\\
         Replace & 0 & 0\\
-        AddToClosed & 100  & 0.01\\
-        SearchInClosed & 126 & 0\\
-        RemoveFromClosed & 0 & 0\\
+        AddToClosed & 1760  & 4.41\\
+        SearchInClosed & 17180 & 30.9\\
+        RemoveFromClosed & 1 & 0.35\\
       \end{tabular}
     }
     \hfil
@@ -366,7 +366,7 @@
         \begin{tabular}{c|c|c}
           \textbf{TotalPNodes} & \textbf{MaxOpenNodes} & \textbf{Fill}\\
           \hline
-          228 & 9 & Large\\
+          1759 & 110 & Large\\
         \end{tabular}
     }
     \hfil
@@ -383,7 +383,9 @@
   \end{table}
 
   \subsection{Comparison}
-
+  We can see in the data that the Dead-End heuristic is a good heuristic, since it improves the time of Search function, which is the most time consuming function 
+  in the A* algorithm, even though it has a big initializaation cost calculating the DFS in the room graph. But it's still not a big optimization, since it shows 
+  results worse than NodeArray A*.\\
 
   \section{Conclusions}
   Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations can make it much faster, 
