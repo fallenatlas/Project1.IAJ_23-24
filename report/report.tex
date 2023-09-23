@@ -237,6 +237,7 @@
   By using precomputation of the grid, we can make bounding boxes for each node and improve the NodeArray A* algorithm. We do this by using djikstra to
   calculate fastest path from each node to all other nodes. This way, we know which direction we should choose when trying to go to a specific node.
   This optimization causes, sometimes, a heavy increase on the starting time, due to the precomputation, but it improves the runtime of the algorithm by a lot.\\ 
+  
   \subsection{Data}
   \begin{table}[h!]
     \parbox{.45\linewidth}{
@@ -305,7 +306,80 @@
   Comparing this data with the previous ones, we can see that this is by far the best optimization in terms of runtime. This is due to the use of bounding boxes,
   that shorten the amounts of nodes we process, and thus the amount of calls to add, remove and search in the open and closed set.\\
 
-  \section{Bonus Level}
+  \section{Bonus Level - Dead-End Heuristic}
+
+  \subsection{Algorithm}
+  For the Bonus Level, we implemented the A* algorithm with the Dead-End heuristic. This heuristic is calculated by using a precomputation of the grid, where we
+  create clusters for each room. This clusters are created using a floodfill in the beginning of the precomputation. At runtime, we calculate the possible paths 
+  in the room graph and update the heurisitic.\\
+  
+  \subsection{Data}
+  \begin{table}[h!]
+    \parbox{.45\linewidth}{
+      \centering
+      \caption{NodeArray A* with Goal Bounding performance (Path 2)}
+      \label{tab:tableDeadEnd2}
+      \begin{tabular}{c|c|c}
+        \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
+        \hline
+        A*Pathfinding.Search  & 1 & 10.62\\
+        GetBestAndRemove & 200 & 0.43\\
+        AddToOpen & 216 & 0.34\\
+        SearchInOpen & 235 & 0\\
+        RemoveFromOpen & 0 & 0\\
+        Replace & 0 & 0\\
+        AddToClosed & 100  & 0.01\\
+        SearchInClosed & 126 & 0\\
+        RemoveFromClosed & 0 & 0\\
+      \end{tabular}
+    }
+    \hfil
+    \parbox{.45\linewidth}{
+      \centering
+      \caption{NodeArray A* with Goal Bounding performance (Path 3)}
+      \label{tab:tableDeadEnd3}
+      \begin{tabular}{c|c|c}
+        \textbf{Method} & \textbf{Calls} & \textbf{Execution Time (ms)}\\
+        \hline
+        A*Pathfinding.Search  & 1 & 17.12\\
+        GetBestAndRemove & 158 & 0.40\\
+        AddToOpen & 165 & 0.35\\
+        SearchInOpen & 388 & 0.01\\
+        RemoveFromOpen & 0 & 0\\
+        Replace & 0 & 0\\
+        AddToClosed & 158 & 0.03\\
+        SearchInClosed & 282 & 0.01\\
+        RemoveFromClosed & 0 & 0\\
+      \end{tabular}
+    }
+  \end{table}
+  \begin{table}[h!]
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{NodeArray A* with Goal Bounding grid information (Path 2)}
+        \label{tab:tableDeadEndGrid2}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          228 & 0.1092952 & 9\\
+        \end{tabular}
+    }
+    \hfil
+    \parbox{.45\linewidth}{
+        \centering
+        \caption{NodeArray A* with Goal Bounding grid information (Path 3)}
+        \label{tab:tableDeadEndGrid3}
+        \begin{tabular}{c|c|c}
+          \textbf{TotalPNodes} & \textbf{TotalPTime} & \textbf{MaxOpenNodes}\\
+          \hline
+          157 & 0.4738739 & 8\\
+        \end{tabular}
+    }
+  \end{table}
+
+  \subsection{Comparison}
+
+
   \section{Conclusions}
   Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations make it must faster, without compromising
   finding the best path. \\
