@@ -25,23 +25,18 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             FloodFill(grid);
             CreateClusterGraph(grid);
         }
+
         public override void InitializePathfindingSearch(int startX, int startY, int goalX, int goalY)
         {
             base.InitializePathfindingSearch(startX, startY, goalX, goalY);
+
             clustersInPath = new Dictionary<int, Cluster>();
             int startCluster = grid.GetGridObject(startX, startY).cluster;
             int goalCluster = grid.GetGridObject(goalX, goalY).cluster;
-            Debug.Log(startCluster);
-            clusters[startCluster - 1].CalculatePathsTo(clustersInPath, goalCluster, null);
-            Debug.Log(clustersInPath.Count + "fdrdsfsfs");
-            Debug.Log(clustersInPath.TryGetValue(2, out Cluster cluster));
+
+            clusters[startCluster - 1].CalculatePathsTo(clustersInPath, goalCluster, new HashSet<Cluster>());
+            
             CalculateHeuristics(grid);
-            foreach (var c in clusters[54].neighbors) {
-                Debug.Log(c);
-            }
-            Debug.Log(grid.GetGridObject(46,26).cluster);
-            Debug.Log(grid.GetGridObject(47,26).cluster);
-            Debug.Log(grid.GetGridObject(1,1).cluster);
         }
 
         public void FloodFill(Grid<NodeRecord> grid) {
@@ -61,7 +56,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         }
 
         private void CreateCluster(Grid<NodeRecord> grid, int currCluster, int x, int y) {
-            Debug.Log(currCluster);
             int nodesInLine = 0;
             int nodesInPrevLine = -1;
             bool firstGrow = true;
@@ -124,6 +118,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             foreach(NodeRecord node in grid.getAll()) {
                 if (!clustersInPath.ContainsKey(node.cluster))
                     node.hCost = float.MaxValue;
+                else
+                    node.hCost = 0;
             }
         }
     }
