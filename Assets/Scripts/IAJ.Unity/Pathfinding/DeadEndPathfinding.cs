@@ -60,14 +60,14 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             int nodesInPrevLine = -1;
             bool firstGrow = true;
             int firstX = x;
-            int lastX = grid.getWidth();
+            int lastX = grid.getWidth() - 1;
 
             for(;  x < grid.getWidth() && y < grid.getHeight() && grid.GetGridObject(x + 1, y + 1).Available(); x++, y++);
 
             for (; 0 <= y; y--) {
                 //finds next available x
                 for(x = firstX - 1; !grid.GetGridObject(x, y).Available(); x++) {
-                    if (x > lastX)
+                    if (x >= lastX)
                         return;
                 }
                 firstX = x;
@@ -80,7 +80,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                             firstGrow = false;
                         nodesInPrevLine = nodesInLine;
                         nodesInLine = 0;
-                        lastX = x - 1;
+                        lastX = x;
                         break;
                     }
 

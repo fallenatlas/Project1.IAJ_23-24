@@ -176,7 +176,6 @@ public class PathfindingManager : MonoBehaviour
             {
                 this.pathfinding.InProgress = false;
                 this.visualGrid.DrawPath(this.solution);
-                //this.visualGrid.DrawClusters();
             }
             if (partialPath && !finished)
             {
