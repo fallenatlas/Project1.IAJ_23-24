@@ -317,8 +317,9 @@
 
   \subsection{Algorithm}
   For the Bonus Level, we implemented the A* algorithm with the Dead-End heuristic. This heuristic is calculated by using a precomputation of the grid, where we
-  create clusters for each room. This clusters are created using a floodfill in the beginning of the precomputation. At runtime, we calculate the possible paths 
-  in the room graph and update the heurisitic. This algorithm is based on the A* version that uses PriorityHeap for open set and Dictionary for closed set.\\
+  create clusters for each room. These clusters are created using a floodfill in the beginning of the precomputation. At runtime, we calculate all the possible paths 
+  in the room graph and update the heurisitic by giving nodes not in any path the max value. This algorithm is based on the A* version that uses PriorityHeap for 
+  open set and Dictionary for closed set.\\
   
   \subsection{Data}
   \begin{table}[h!]
@@ -385,9 +386,10 @@
   \end{table}
 
   \subsection{Comparison}
-  We can see in the data that the Dead-End heuristic is a good heuristic, since it improves the time of Search function, which is the most time consuming function 
+  We can see in the data that the Dead-End heuristic is a good heuristic, since it improves the time of the Search function, which is the most time consuming function 
   in the A* algorithm, even though it has a big initialization cost calculating the DFS in the room graph. But it's still not a big optimization, since it shows 
-  results worse than NodeArray A*.\\
+  results worse than NodeArray A*. It's also worth noting that the giant grid is not very fit for this algorithm as it creates many interconnecting clusters, which
+  causes finding all the paths very costly in some cases. With a clustering algorithm better fit for this map the results could be better.\\
 
   \section{Conclusions}
   Analysing all algorithms we can acess that A* by itself is already a good algorithm, but it's optimizations can make it much faster, 
