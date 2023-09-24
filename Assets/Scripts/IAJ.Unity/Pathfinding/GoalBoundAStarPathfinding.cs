@@ -11,8 +11,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
 {
     public class GoalBoundAStarPathfinding : NodeArrayAStarPathfinding
     {
-        // You can create a bounding box in several differente ways, this is simply suggestion
-        // Goal Bounding Box for each Node  direction - Bounding limits: minX, maxX, minY, maxY
         public Dictionary<Vector2,Dictionary<Direction, Vector4>> goalBounds;
         public GoalBoundAStarPathfinding(IHeuristic heuristic) : base(heuristic)
         {
