@@ -73,3 +73,8 @@ crashlytics-build.properties
 
 #vscode settings
 .vscode/*
+
+# report trash
+report/*.aux
+report/*.toc
+report/*.log
