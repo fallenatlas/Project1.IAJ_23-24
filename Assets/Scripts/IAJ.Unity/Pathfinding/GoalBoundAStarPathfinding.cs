@@ -40,10 +40,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             
         }
 
-        // You can change the arguments of the following method....
+        // Djikstra Flood Fill Algorithm 
         public void FloodFill(NodeRecord original, Grid<NodeRecord> grid)
         {
-            // Quite similar to the A*Search method except the fact that there is no goal....so where does it stop?
             NodeRecord CurrentNode = original;
             NodeRecordArray recordArray = new NodeRecordArray(grid.getAll());
             IOpenSet open = recordArray;
@@ -66,7 +65,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 CurrentNode = open.GetBestAndRemove();
                 closed.AddToClosed(CurrentNode);
 
-                //Handle the neighbours/children with something like this
                 foreach (var neighbourNode in CurrentNode.GetNeighbourList(grid)) 
                 {
                     float newGCost = CurrentNode.gCost + CalculateDistanceCost(CurrentNode, neighbourNode);
@@ -88,7 +86,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                         }
                     }
 
-                    //If in Open..
                     else if (open.SearchInOpen(neighbourNode) != null)
                     {
                         if (newGCost < neighbourNode.gCost)
