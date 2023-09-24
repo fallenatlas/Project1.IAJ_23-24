@@ -187,7 +187,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 return Direction.DownLeft;
             if (node.x == neighbour.x + 1 && node.y == neighbour.y)
                 return Direction.Left;
-            return Direction.Up; // this should never happen
+            return Direction.Unknown; // this should never happen
         }
 
 
